@@ -1,4 +1,4 @@
-package me.dohoon;
+package me.dohoon.domain;
 
 import jakarta.persistence.*;
 import lombok.Builder;
