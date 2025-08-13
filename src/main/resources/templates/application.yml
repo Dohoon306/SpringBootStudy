@@ -4,6 +4,7 @@ spring:
     properties:
       hibernate:
         format_sql: true
+    defer-datasource-initialization: true
 
   datasource:
     url: jdbc:h2:mem:testdb
@@ -14,4 +15,3 @@ spring:
 
 
 
-    defer-datasource-initialization: true

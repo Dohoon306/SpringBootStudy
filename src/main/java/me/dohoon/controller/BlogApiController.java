@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class BlogApiController {
     private final BlogService blogService;
 
-    @PostMapping
+    @PostMapping("/api/articles")
     public ResponseEntity<Article> addArticle(@RequestBody AddArticleRequest request){
         Article savedArticle = blogService.save(request);
 
