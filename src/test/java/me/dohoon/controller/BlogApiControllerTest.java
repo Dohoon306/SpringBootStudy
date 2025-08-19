@@ -17,14 +17,12 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-
 
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -124,6 +122,27 @@ class BlogApiControllerTest {
                 .andExpect(status().isOk())//200ok인지 확인
                 .andExpect(jsonPath("$.content").value(content))//return 되는 값 맞는지 확인
                 .andExpect(jsonPath("$.title").value(title));
+    }
+
+    @DisplayName("deleteArticle(): 블로그 글 삭제에 성공한다.")
+    @Test
+    public void deleteArticle() throws Exception{
+        //given
+        final String url = "/api/articles/{id}";
+        final String title = "title";
+        final String content = "content";
+
+        Article savedArticle = blogRepository.save(Article.builder()
+                .title(title)
+                .content(content)
+                .build());
+
+        //when
+        mockMvc.perform(delete(url,savedArticle.getId()))
+                .andExpect(status().isOk());
+
+        //then
+
     }
 
 
