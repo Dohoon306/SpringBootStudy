@@ -7,6 +7,7 @@ import me.dohoon.repository.BlogRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -18,8 +19,21 @@ public class BlogService {
     public Article save(AddArticleRequest request){
         return blogRepository.save(request.toEntity());
     }
-
+    
+    //전부 검색
     public List<Article> findAll(){
         return blogRepository.findAll();
     }
+    
+    //특정 값 검색
+    public Article findById(long id) {
+        Optional<Article> optionalArticle = blogRepository.findById(id);
+
+        if (optionalArticle.isPresent()) {
+            return optionalArticle.get(); // 값이 있으면 반환
+        } else {
+            throw new IllegalArgumentException("not found: " + id); // 없으면 예외
+        }
+    }
+
 }

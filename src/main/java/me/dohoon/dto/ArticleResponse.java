@@ -1,5 +1,6 @@
 package me.dohoon.dto;
 
+import lombok.Builder;
 import lombok.Getter;
 import me.dohoon.domain.Article;
 

@@ -8,10 +8,7 @@ import me.dohoon.dto.ArticleResponse;
 import me.dohoon.service.BlogService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -20,6 +17,7 @@ import java.util.List;
 public class BlogApiController {
     private final BlogService blogService;
 
+    //create
     @PostMapping("/api/articles")
     public ResponseEntity<Article> addArticle(@RequestBody AddArticleRequest request){//자동으로 JSON->dto변환
         //
@@ -29,6 +27,7 @@ public class BlogApiController {
                 .body(savedArticle);
     }
 
+    //read all
     @GetMapping("/api/articles")
     public ResponseEntity<List<ArticleResponse>> findAllArticles(){
         List<ArticleResponse> articles = blogService.findAll()
@@ -37,5 +36,14 @@ public class BlogApiController {
                 .toList();
         return ResponseEntity.ok()
                 .body(articles);
+    }
+
+    //read by id
+    @GetMapping("/api/articles/{id}")
+    public ResponseEntity<ArticleResponse> findArticle(@PathVariable long id){
+        Article article = blogService.findById(id);
+
+        return ResponseEntity.ok()
+                .body(new ArticleResponse(article));
     }
 }
