@@ -3,6 +3,7 @@ package me.dohoon.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import me.dohoon.domain.Article;
 import me.dohoon.dto.AddArticleRequest;
+import me.dohoon.dto.UpdateArticleRequest;
 import me.dohoon.repository.BlogRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -16,6 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 
@@ -142,7 +144,44 @@ class BlogApiControllerTest {
                 .andExpect(status().isOk());
 
         //then
+        List<Article> articles = blogRepository.findAll();
 
+        assertThat(articles).isEmpty();
+    }
+    
+    //6.7 블로그 글 수정 API 테스트코드
+    //Given : 블로그 글을 저장하고, 블로그 글 수정에 필요한 요청객체 만들기
+    //when : UPDATE API로 수정 요청을 보냄, 요청타입은 JSON이고, given절에서 미리 만들어둔 객체를 요청 본문으로 보냄
+    //then : 응답 코드가 200 OK인지 확인하기, 블로그 글 id로 조회한 후에 값이 수정되었는지 확인
+    @DisplayName("updateArticle(): 블로그 글 수정에 성공한다.")
+    @Test
+    public void updqteArticle() throws Exception{
+        //given
+        final String url = "/api/articles/{id}";
+        final String title = "title";
+        final String content = "content";
+
+        Article savedArticle = blogRepository.save(Article.builder()
+                .title(title)
+                .content(content)
+                .build());
+
+        final String newTitle = "new title";
+        final String newContent = "new content";
+        UpdateArticleRequest request = new UpdateArticleRequest(newTitle,newContent);
+
+        //when
+        ResultActions result = mockMvc.perform(put(url,savedArticle.getId())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(request)));
+
+        //then
+        result.andExpect(status().isOk());
+
+        Article article = blogRepository.findById(savedArticle.getId()).get();
+
+        assertThat(article.getTitle()).isEqualTo(newTitle);
+        assertThat(article.getContent()).isEqualTo(newContent);
     }
 
 
